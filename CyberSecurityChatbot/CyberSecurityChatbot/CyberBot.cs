@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Generic;// Needed for using List<T> and Dictionary<T>
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +8,11 @@ namespace CyberSecurityChatbot
 {
     internal class CyberBot
     {
+        // Dictionary using keyword pairs as keys, and full explanations as values
+        // Example key: ("phishing", "what") → value: explanation string
         private Dictionary<(string, string), string> responses = new Dictionary<(string, string), string>();
+
+        // List of general, casual questions the user may ask the bot
         private List<string> generalQuestions = new List<string>
         {
             "How are you?",
@@ -18,6 +22,7 @@ namespace CyberSecurityChatbot
             "How do you help people?"
         };
 
+        // List of predefined cybersecurity-related questions and these are shown in the menu for convenience
         private List<string> menuQuestions = new List<string>
         {
             "What is phishing?",
@@ -32,10 +37,12 @@ namespace CyberSecurityChatbot
             "Why is online privacy important?"
         };
 
+        // Constructor: called when a CyberBot object is created, this loads the dictionary of keyword responses
         public CyberBot()
         {
             InitializeResponses();
         }
+
 
         public void StartConversation()
         {
@@ -121,6 +128,7 @@ namespace CyberSecurityChatbot
 
         private void ShowMenu()
         {
+            //This is where I set the foreground color for this displayed output.
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("\n📘 You can ask me about:");
             for (int i = 0; i < menuQuestions.Count; i++)
@@ -132,6 +140,7 @@ namespace CyberSecurityChatbot
             Console.ResetColor();
         }
 
+        //On this method if the user input conaints any fo these generic questions then it will return the response saved in the return statments.
         private string GetGeneralResponse(string input)
         {
             if (input.Contains("how are you")) return "I'm just code, but I'm here and ready to help you stay cyber safe!";
@@ -142,6 +151,7 @@ namespace CyberSecurityChatbot
             return null;
         }
 
+        //This method stores the 2 keywords requried in the dictionary as well as the response prompted if the user input has both keywords in it
         private void InitializeResponses()
         {
             responses.Add(("phishing", "what"), "Phishing is a cyberattack where attackers impersonate trusted sources to steal information.");
