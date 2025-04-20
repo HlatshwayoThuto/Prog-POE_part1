@@ -17,6 +17,7 @@ namespace CyberSecurityChatbot
             "Who made you?",
             "How do you help people?"
         };
+
         private List<string> menuQuestions = new List<string>
         {
             "What is phishing?",
@@ -43,34 +44,46 @@ namespace CyberSecurityChatbot
             Console.WriteLine("╚════════════════════════════════════════╝");
             Console.Write("What's your name? ");
             string name = Console.ReadLine();
-            Console.WriteLine($"Nice to meet you, { name} !Ask me anything about cybersecurity.");
-            Console.WriteLine("Type 'menu' if you need help with what to ask.");
+            Console.WriteLine($"\nNice to meet you, {name}!");
+            Console.WriteLine("Ask me anything about cybersecurity.");
+            Console.WriteLine("Type 'menu' to see topics or 'exit' to quit.\n");
 
             while (true)
             {
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.Write("You: ");
+                Console.ResetColor();
+
                 string input = Console.ReadLine().ToLower();
 
                 if (string.IsNullOrWhiteSpace(input))
                 {
-                    Console.WriteLine("Bot: I didn’t quite understand that. Could you rephrase?");
+                    Console.WriteLine("Bot: I didn’t quite understand that. Could you rephrase?\n");
                     continue;
+                }
+
+                if (input == "exit")
+                {
+                    Console.WriteLine("Bot: Thanks for chatting! Stay safe online. 👋");
+                    break;
                 }
 
                 if (input == "menu")
                 {
                     ShowMenu();
-                    Console.Write("Choose a number or type your question: ");
-                    string menuChoice = Console.ReadLine().ToLower();
+                    Console.Write("\nChoose a number, type your question, or type 'exit': ");
+                    input = Console.ReadLine().ToLower();
 
-                    if (int.TryParse(menuChoice, out int number) && number >= 1 && number <= menuQuestions.Count)
+                    if (input == "exit")
+                    {
+                        Console.WriteLine("Bot: Exiting menu. You can continue chatting.");
+                        continue;
+                    }
+
+                    if (int.TryParse(input, out int number) && number >= 1 && number <= menuQuestions.Count)
                     {
                         input = menuQuestions[number - 1].ToLower();
-                        Console.WriteLine($"You selected: {menuQuestions[number - 1]}");
-                    }
-                    else
-                    {
-                        input = menuChoice;
+                        Console.WriteLine($"\nYou selected: {menuQuestions[number - 1]}");
                     }
                 }
 
@@ -79,7 +92,9 @@ namespace CyberSecurityChatbot
                 {
                     if (input.Contains(key.Item1) && input.Contains(key.Item2))
                     {
-                        Console.WriteLine($"Bot: { responses[key]}");
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine($"\nBot: {responses[key]}\n");
+                        Console.ResetColor();
                         found = true;
                         break;
                     }
@@ -90,11 +105,15 @@ namespace CyberSecurityChatbot
                     string generalResponse = GetGeneralResponse(input);
                     if (generalResponse != null)
                     {
-                        Console.WriteLine($"Bot: { generalResponse}");
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine($"\nBot: {generalResponse}\n");
+                        Console.ResetColor();
                     }
                     else
                     {
-                        Console.WriteLine("Bot: I’m not sure I understand. Can you try asking in another way or type 'menu'?");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("\nBot: I’m not sure I understand. Try rephrasing or type 'menu' for help.\n");
+                        Console.ResetColor();
                     }
                 }
             }
@@ -102,36 +121,39 @@ namespace CyberSecurityChatbot
 
         private void ShowMenu()
         {
-            Console.WriteLine("Here are some cybersecurity topics you can ask me about: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("\n📘 You can ask me about:");
             for (int i = 0; i < menuQuestions.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {menuQuestions[i]}");
             }
-            Console.WriteLine("You can also ask: " + string.Join(", ", generalQuestions));
+
+            Console.WriteLine("\n💬 You can also ask: " + string.Join(", ", generalQuestions));
+            Console.ResetColor();
         }
 
         private string GetGeneralResponse(string input)
         {
             if (input.Contains("how are you")) return "I'm just code, but I'm here and ready to help you stay cyber safe!";
-            if (input.Contains("purpose")) return "I'm here to help raise cybersecurity awareness and help you understand online safety better.";
-            if (input.Contains("what can i ask")) return "You can ask me about phishing, passwords, scams, privacy, and safe browsing.";
-            if (input.Contains("who made you")) return "I was developed by a Programming 2A student as part of their project!";
-            if (input.Contains("help people")) return "I help people learn how to stay safe online by answering cybersecurity questions.";
+            if (input.Contains("purpose")) return "I'm here to raise awareness and answer questions about cybersecurity.";
+            if (input.Contains("what can i ask")) return "You can ask about phishing, passwords, scams, privacy, or safe browsing.";
+            if (input.Contains("who made you")) return "I was created by a Programming 2A student for their POE project.";
+            if (input.Contains("help people")) return "I help people understand online safety through simple explanations.";
             return null;
         }
 
         private void InitializeResponses()
         {
-            responses.Add(("phishing", "what"), "Phishing is a cyberattack where attackers pretend to be trustworthy sources to trick you into giving up sensitive information like passwords or banking details. They often use fake emails or websites.");
-            responses.Add(("phishing", "protect"), "To protect yourself from phishing, never click suspicious links, verify email addresses carefully, and use multi-factor authentication wherever possible.");
-            responses.Add(("password", "strong"), "A strong password includes uppercase and lowercase letters, numbers, and symbols. It should be at least 12 characters long and not include personal information.");
-            responses.Add(("password", "reuse"), "Reusing passwords is dangerous because if one account is compromised, others are too. Use a password manager to store unique passwords for each account.");
-            responses.Add(("browsing", "safe"), "To browse safely, use secure HTTPS websites, avoid clicking unknown links, and keep your browser up to date.");
-            responses.Add(("website", "secure"), "A secure website usually starts with HTTPS and has a padlock symbol in the address bar. It encrypts your data to keep it safe.");
-            responses.Add(("scam", "online"), "Online scams often come in the form of fake offers, impersonation, or investment frauds. Be skeptical of deals that seem too good to be true.");
-            responses.Add(("scam", "avoid"), "Avoid scams by verifying sources, not sharing personal details with strangers, and reporting suspicious activity to your service provider.");
-            responses.Add(("privacy", "protect"), "Protect your online privacy by using strong passwords, limiting data shared on social media, and enabling privacy settings on apps.");
-            responses.Add(("privacy", "important"), "Online privacy is important because your personal data can be used for fraud, identity theft, or surveillance if not protected properly.");
+            responses.Add(("phishing", "what"), "Phishing is a cyberattack where attackers impersonate trusted sources to steal information.");
+            responses.Add(("phishing", "protect"), "Never click on suspicious links, and verify emails before responding to avoid phishing.");
+            responses.Add(("password", "strong"), "Use a strong password with uppercase, lowercase, numbers, and symbols (12+ characters).");
+            responses.Add(("password", "reuse"), "Avoid reusing passwords across websites. Use a password manager for safety.");
+            responses.Add(("browsing", "safe"), "Use HTTPS sites, avoid popups and downloads, and enable browser security settings.");
+            responses.Add(("website", "secure"), "A secure site uses HTTPS and shows a padlock icon in the browser address bar.");
+            responses.Add(("scam", "online"), "Online scams often involve fake emails, investment frauds, or impersonation attempts.");
+            responses.Add(("scam", "avoid"), "Avoid scams by being skeptical of deals that sound too good to be true.");
+            responses.Add(("privacy", "protect"), "Protect your privacy by limiting data shared online and using privacy settings.");
+            responses.Add(("privacy", "important"), "Online privacy is important to avoid identity theft and unauthorized tracking.");
         }
     }
 }

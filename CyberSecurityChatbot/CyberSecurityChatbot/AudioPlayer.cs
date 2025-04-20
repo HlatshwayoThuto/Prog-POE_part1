@@ -10,7 +10,7 @@ namespace CyberSecurityChatbot
     internal class AudioPlayer
     {
         public static void PlayGreeting()
-       {
+        {
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "resources", "greeting.wav");
 
             if (File.Exists(filePath))
